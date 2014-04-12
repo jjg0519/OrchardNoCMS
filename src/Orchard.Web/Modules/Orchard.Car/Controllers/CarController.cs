@@ -5,6 +5,8 @@ using System.Web;
 using System.Web.Mvc;
 using Orchard.Car.Models;
 using Orchard.Car.Services;
+using Orchard.Themes;
+using Orchard.Utility;
 
 namespace Orchard.Car.Controllers
 {
@@ -16,6 +18,7 @@ namespace Orchard.Car.Controllers
             _carInfoService = carInfoService;
         }
 
+        [Themed]
         public ActionResult Index()
         { 
          return View();
@@ -31,17 +34,13 @@ namespace Orchard.Car.Controllers
         {        
             
             var result=_carInfoService.CreateCar(model);
-            if (result)
-            {
-                return View("Index");
-            }
-            return View("Whatever");
+            return Json(new OperateMessage<CarInfo>(OperateResult.Success,true,string.Empty,model));
         }
 
         public JsonResult List()
         {
             var result = _carInfoService.GetList();
-            return Json(result, JsonRequestBehavior.AllowGet);
+            return Json(new OperateMessage<object>(result, 1), JsonRequestBehavior.AllowGet);
         }
 
     }
